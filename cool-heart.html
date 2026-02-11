@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>炫酷爱心 - 紫灵大傻瓜</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        
+        .container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        /* 爱心动画容器 */
+        .heart-container {
+            position: relative;
+            width: 400px;
+            height: 400px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        /* 爱心形状 */
+        .heart {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            transform: rotate(45deg);
+            animation: pulse 2s ease-in-out infinite;
+            box-shadow: 0 0 30px rgba(245, 87, 108, 0.8);
+            border-radius: 0;
+        }
+        
+        .heart::before,
+        .heart::after {
+            content: '';
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 50%;
+        }
+        
+        .heart::before {
+            top: -100px;
+            left: 0;
+        }
+        
+        .heart::after {
+            top: 0;
+            left: -100px;
+        }
+        
+        /* 文字样式 */
+        .text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            font-size: 24px;
+            font-weight: bold;
+            color: #ffffff;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            z-index: 10;
+            animation: textGlow 2s ease-in-out infinite alternate;
+        }
+        
+        /* 粒子效果 */
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: #ffffff;
+            border-radius: 50%;
+            opacity: 0;
+            animation: particleFloat 3s ease-in-out infinite;
+        }
+        
+        /* 动画效果 */
+        @keyframes pulse {
+            0% {
+                transform: rotate(45deg) scale(1);
+                box-shadow: 0 0 30px rgba(245, 87, 108, 0.8);
+            }
+            50% {
+                transform: rotate(45deg) scale(1.1);
+                box-shadow: 0 0 50px rgba(245, 87, 108, 1);
+            }
+            100% {
+                transform: rotate(45deg) scale(1);
+                box-shadow: 0 0 30px rgba(245, 87, 108, 0.8);
+            }
+        }
+        
+        @keyframes textGlow {
+            0% {
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5), 0 0 10px #ffffff;
+            }
+            100% {
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5), 0 0 20px #ffffff, 0 0 30px #f093fb;
+            }
+        }
+        
+        @keyframes particleFloat {
+            0% {
+                opacity: 0;
+                transform: scale(0);
+            }
+            10% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            90% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0) translateY(-100px);
+            }
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .heart-container {
+                width: 300px;
+                height: 300px;
+            }
+            
+            .heart,
+            .heart::before,
+            .heart::after {
+                width: 150px;
+                height: 150px;
+            }
+            
+            .heart::before {
+                top: -75px;
+            }
+            
+            .heart::after {
+                left: -75px;
+            }
+            
+            .text {
+                font-size: 18px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .heart-container {
+                width: 250px;
+                height: 250px;
+            }
+            
+            .heart,
+            .heart::before,
+            .heart::after {
+                width: 120px;
+                height: 120px;
+            }
+            
+            .heart::before {
+                top: -60px;
+            }
+            
+            .heart::after {
+                left: -60px;
+            }
+            
+            .text {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="heart-container">
+            <div class="heart"></div>
+            <div class="text">紫灵大傻瓜</div>
+        </div>
+        <div class="particles" id="particles"></div>
+    </div>
+    
+    <script>
+        // 创建粒子效果
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const heartRect = document.querySelector('.heart').getBoundingClientRect();
+            const heartCenterX = heartRect.left + heartRect.width / 2;
+            const heartCenterY = heartRect.top + heartRect.height / 2;
+            
+            // 清除旧粒子
+            particlesContainer.innerHTML = '';
+            
+            // 创建100个粒子
+            for (let i = 0; i < 100; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                // 随机位置（在爱心周围）
+                const angle = Math.random() * Math.PI * 2;
+                const distance = Math.random() * 100;
+                const x = heartCenterX + Math.cos(angle) * distance - window.innerWidth / 2;
+                const y = heartCenterY + Math.sin(angle) * distance - window.innerHeight / 2;
+                
+                particle.style.left = `${x}px`;
+                particle.style.top = `${y}px`;
+                particle.style.animationDelay = `${Math.random() * 3}s`;
+                particle.style.animationDuration = `${2 + Math.random() * 2}s`;
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+        
+        // 初始化粒子
+        createParticles();
+        
+        // 窗口大小改变时重新创建粒子
+        window.addEventListener('resize', createParticles);
+        
+        // 每隔5秒重新创建粒子
+        setInterval(createParticles, 5000);
+    </script>
+</body>
+</html>
